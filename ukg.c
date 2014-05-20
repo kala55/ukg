@@ -168,6 +168,10 @@ long long ukg_next_id(ukg_context_t *ctx)
     if (timestamp == 0LL) { /* function called error */
         return -1LL;
     }
+    
+    if (timestamp < ctx->last_timestamp) { /* ntp lead to time back, may id conflict */
+        return -2LL;
+    }
 
     if (ctx->last_timestamp == timestamp) {
         ctx->sequence = (ctx->sequence + 1) & ctx->sequence_mask;
